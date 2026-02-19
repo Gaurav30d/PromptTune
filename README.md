@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# PromptTune
-=======
 # PromptTune - AI Prompt Enhancer
 
 PromptTune is a Chrome Extension designed to help users transform vague ideas into professional, high-quality prompts for Large Language Models (LLMs) like Gemini, ChatGPT, and Claude. It leverages the Google Gemini API to rewrite and enhance user inputs.
@@ -64,6 +61,45 @@ The configuration file that defines permissions and entry points.
 -   **Host Permissions**:
     -   `https://generativelanguage.googleapis.com/*`: Allow direct API calls to Google's servers.
 
+## Development & Contribution
+
+Follow these steps to set up the project locally and contribute changes:
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Gaurav30d/PromptTune.git
+cd PromptTune
+```
+
+### 2. Setup in Chrome
+Since this is a vanilla JavaScript project, there is no build step (npm install/build is not required).
+1.  Open Chrome and navigate to `chrome://extensions/`.
+2.  Enable **Developer mode** (top right toggle).
+3.  Click **Load unpacked**.
+4.  Select the `PromptTune` folder you just cloned.
+
+### 3. Making Changes
+-   Edit files in your preferred code editor (VS Code recommended).
+-   Reload the extension in `chrome://extensions/` to see changes.
+-   **Note**: Changes to `background.js` or `manifest.json` usually require a full reload of the extension. Changes to popup files apply immediately upon reopening the popup.
+
+### 4. Pushing Changes to GitHub
+Once you are happy with your changes, follow these standard Git commands:
+
+```bash
+# check which files have changed
+git status
+
+# add files to the staging area
+git add . 
+
+# commit your changes with a descriptive message
+git commit -m "Describe your changes here"
+
+# push to the repository
+git push origin main
+```
+
 ## Data Flow
 
 1.  **User Input**: User types a draft prompt in the popup.
@@ -75,19 +111,6 @@ The configuration file that defines permissions and entry points.
     -   Gemini API returns the enhanced text.
     -   `popup.js` displays the result and saves the pair (original + enhanced) to `chrome.storage.local`.
 4.  **History**: Users can view past interactions, loaded from `chrome.storage.local`.
-
-## Setup & Installation
-
-1.  **Clone the repository**.
-2.  **Open Chrome Extensions**: Go to `chrome://extensions/`.
-3.  **Enable Developer Mode**: Toggle the switch in the top right.
-4.  **Load Unpacked**: Click the button and select the project directory (`PromptTune/`).
-5.  **Configure**:
-    -   Click the extension icon.
-    -   Go to **Settings** (gear icon).
-    -   Enter your **Gemini API Key** (get one from Google AI Studio).
-    -   (Optional) Set a model name (default: `gemini-2.5-flash`).
-6.  **Use**: Type a vague prompt and click "Enhance Prompt".
 
 ## Project Structure
 
@@ -104,4 +127,3 @@ PromptTune/
     ├── options.html
     └── options.js
 ```
->>>>>>> 9e6abbd (Initial commit for PromptTune extension)

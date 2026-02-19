@@ -1,0 +1,29 @@
+{
+    "manifest_version": 3,
+    "name": "PromptTune - AI Prompt Enhancer",
+    "version": "1.0",
+    "description": "Transform vague ideas into professional, high-quality prompts for LLMs.",
+    "permissions": [
+        "storage",
+        "activeTab"
+    ],
+    "action": {
+        "default_popup": "popup/popup.html",
+        "default_title": "Enhance your prompt"
+    },
+    "options_ui": {
+        "page": "options/options.html",
+        "open_in_tab": false
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "icons": {
+        "16": "assets/icon16.png",
+        "48": "assets/icon48.png",
+        "128": "assets/icon128.png"
+    },
+    "host_permissions": [
+        "https://generativelanguage.googleapis.com/*"
+    ]
+}

@@ -51,18 +51,77 @@
       </button>
 
       <div id="result-container" class="result-container hidden">
-        <label>Professional Prompt</label>
-        <div class="result-box">
-          <p id="enhanced-prompt"></p>
+        <label>Enhanced System Prompt</label>
+        <div class="result-cards-wrapper">
+          <!-- Role Card -->
+          <div class="prompt-card" data-section="role">
+            <div class="card-header">
+              <div class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="card-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Role
+                <span class="char-count" id="role-count">0 chars</span>
+              </div>
+              <button class="copy-section-btn" data-target="enhanced-role" title="Copy Role">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </button>
+            </div>
+            <textarea id="enhanced-role" class="card-textarea" placeholder="Enter Role persona..."></textarea>
+          </div>
+
+          <!-- Goal Card -->
+          <div class="prompt-card" data-section="goal">
+            <div class="card-header">
+              <div class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="card-icon"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                Goal
+                <span class="char-count" id="goal-count">0 chars</span>
+              </div>
+              <button class="copy-section-btn" data-target="enhanced-goal" title="Copy Goal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </button>
+            </div>
+            <textarea id="enhanced-goal" class="card-textarea" placeholder="Enter Goal objective..."></textarea>
+          </div>
+
+          <!-- Backstory Card -->
+          <div class="prompt-card" data-section="backstory">
+            <div class="card-header">
+              <div class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="card-icon"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                Backstory
+                <span class="char-count" id="backstory-count">0 chars</span>
+              </div>
+              <button class="copy-section-btn" data-target="enhanced-backstory" title="Copy Backstory">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </button>
+            </div>
+            <textarea id="enhanced-backstory" class="card-textarea" placeholder="Enter Backstory context..."></textarea>
+          </div>
+
+          <!-- Constraints Card -->
+          <div class="prompt-card" data-section="constraints">
+            <div class="card-header">
+              <div class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="card-icon"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="15" y2="17"></line></svg>
+                Constraints
+                <span class="char-count" id="constraints-count">0 chars</span>
+              </div>
+              <button class="copy-section-btn" data-target="enhanced-constraints" title="Copy Constraints">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              </button>
+            </div>
+            <textarea id="enhanced-constraints" class="card-textarea" placeholder="Enter Constraints (one per line)..."></textarea>
+          </div>
         </div>
+
         <div class="actions">
-          <button id="copy-btn" class="secondary-btn">
+          <button id="copy-btn" class="primary-btn" style="flex: 1;">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
               <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
-            Copy
+            <span class="btn-text">Copy Full Prompt</span>
           </button>
           <button id="retry-btn" class="icon-btn" title="Try Again">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"

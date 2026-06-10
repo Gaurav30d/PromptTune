@@ -11,12 +11,13 @@ PromptTune is a Chrome Extension designed to help users transform vague ideas in
 
 ## Key Features
 
-1.  **AI-Powered Enhancement**: Uses Google's Gemini API to rewrite prompts for clarity, context, and specificity.
-2.  **Customizable Settings**: Users can provide their own Gemini API Key and specify the model version (e.g., `gemini-2.5-flash`).
-3.  **History Management**: Local storage of prompt history (last 50 items) allows users to revisit previous enhancements.
-4.  **Session Persistence**: The input field retains text even if the popup is closed, preventing data loss.
-5.  **Clipboard Integration**: One-click copy functionality for the enhanced prompt.
-6.  **Privacy-Focused**: API keys are stored in `chrome.storage.sync` (encrypted by Chrome), and history is stored locally on the device.
+1.  **RPG Prompt Framework**: Transforms vague ideas into structured prompts with clear **Role**, **Goal**, **Backstory**, and **Constraints** cards.
+2.  **Interactive Tuning**: Fully editable text cards let you fine-tune details directly in the popup before copying.
+3.  **Character Counts**: Real-time length indicators dynamically display the character size of each prompt block.
+4.  **Flexible Clipboard Actions**: Copy individual sections (just the role, just constraints, etc.) or copy the unified prompt in Markdown format.
+5.  **Customizable settings**: Easily configure your own Gemini API Key and specify the target model (e.g., `gemini-2.5-flash`).
+6.  **History Management**: Stores your previous 50 queries locally with automatic backward-compatibility for legacy formats.
+7.  **Privacy-First**: API keys and history are stored securely within Chrome local storage, keeping your credentials off third-party servers.
 
 ## Tech Stack
 
@@ -61,29 +62,42 @@ The configuration file that defines permissions and entry points.
 -   **Host Permissions**:
     -   `https://generativelanguage.googleapis.com/*`: Allow direct API calls to Google's servers.
 
-## Development & Contribution
+## Installation & Setup
 
-Follow these steps to set up the project locally and contribute changes:
+Follow these steps to install and set up PromptTune in your Chrome browser:
 
-### 1. Clone the Repository
+### 1. Download or Clone the Extension
+Clone this repository to your local machine:
 ```bash
 git clone https://github.com/Gaurav30d/PromptTune.git
 cd PromptTune
 ```
+*(Alternatively, you can download the repository as a ZIP file and extract it.)*
 
-### 2. Setup in Chrome
-Since this is a vanilla JavaScript project, there is no build step (npm install/build is not required).
-1.  Open Chrome and navigate to `chrome://extensions/`.
-2.  Enable **Developer mode** (top right toggle).
-3.  Click **Load unpacked**.
-4.  Select the `PromptTune` folder you just cloned.
+### 2. Load the Extension in Chrome
+Since this project uses vanilla HTML/CSS/JS, no compilation or `npm install` is required:
+1.  Open Google Chrome and navigate to `chrome://extensions/`.
+2.  Enable **Developer mode** using the toggle switch in the top-right corner.
+3.  Click the **Load unpacked** button in the top-left corner.
+4.  Select the `PromptTune` folder you cloned or extracted (the directory containing `manifest.json`).
 
-### 3. Making Changes
+### 3. Add your Gemini API Key
+To utilize the AI capabilities of PromptTune:
+1.  Get a free API Key from [Google AI Studio](https://aistudio.google.com/).
+2.  Click the **PromptTune** icon in your extension bar.
+3.  Click the **Settings** (gear) icon in the top-right of the popup.
+4.  Paste your API key, select your desired model (e.g. `gemini-2.5-flash`), and click **Save Settings**.
+
+## Development & Contribution
+
+Follow these steps if you want to make changes or contribute to the project:
+
+### 1. Making Changes
 -   Edit files in your preferred code editor (VS Code recommended).
 -   Reload the extension in `chrome://extensions/` to see changes.
 -   **Note**: Changes to `background.js` or `manifest.json` usually require a full reload of the extension. Changes to popup files apply immediately upon reopening the popup.
 
-### 4. Pushing Changes to GitHub
+### 2. Pushing Changes to GitHub
 Once you are happy with your changes, follow these standard Git commands:
 
 ```bash

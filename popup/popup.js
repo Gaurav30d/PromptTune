@@ -4,7 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnText = enhanceBtn.querySelector('.btn-text');
     const loader = enhanceBtn.querySelector('.loader');
     const resultContainer = document.getElementById('result-container');
-    const enhancedPromptText = document.getElementById('enhanced-prompt');
+    const enhancedRole = document.getElementById('enhanced-role');
+    const enhancedGoal = document.getElementById('enhanced-goal');
+    const enhancedBackstory = document.getElementById('enhanced-backstory');
+    const enhancedConstraints = document.getElementById('enhanced-constraints');
     const copyBtn = document.getElementById('copy-btn');
     const retryBtn = document.getElementById('retry-btn');
     const settingsBtn = document.getElementById('settings-btn');
@@ -14,6 +17,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const historyList = document.getElementById('history-list');
     const clearHistoryBtn = document.getElementById('clear-history-btn');
     const errorMsg = document.getElementById('error-msg');
+    const roleCount = document.getElementById('role-count');
+    const goalCount = document.getElementById('goal-count');
+    const backstoryCount = document.getElementById('backstory-count');
+    const constraintsCount = document.getElementById('constraints-count');
+
+    function updateCharCounts() {
+        if (enhancedRole) roleCount.textContent = `${enhancedRole.value.length} chars`;
+        if (enhancedGoal) goalCount.textContent = `${enhancedGoal.value.length} chars`;
+        if (enhancedBackstory) backstoryCount.textContent = `${enhancedBackstory.value.length} chars`;
+        if (enhancedConstraints) constraintsCount.textContent = `${enhancedConstraints.value.length} chars`;
+    }
+
+    [enhancedRole, enhancedGoal, enhancedBackstory, enhancedConstraints].forEach(el => {
+        if (el) el.addEventListener('input', updateCharCounts);
+    });
 
     // Load state
     loadSession();
@@ -56,12 +74,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Please set your API Key in Settings.');
             }
 
-            const enhancedText = await generateEnhancedPrompt(text, apiKey, model);
-            enhancedPromptText.textContent = enhancedText;
+            const enhancedData = await generateEnhancedPrompt(text, apiKey, model);
+            
+            enhancedRole.value = enhancedData.role;
+            enhancedGoal.value = enhancedData.goal;
+            enhancedBackstory.value = enhancedData.backstory;
+            enhancedConstraints.value = enhancedData.constraints.join('\n');
+            
+            updateCharCounts();
             resultContainer.classList.remove('hidden');
 
             // Save to history
-            saveToHistory(text, enhancedText);
+            saveToHistory(text, enhancedData);
 
         } catch (err) {
             showError(err.message);
@@ -70,8 +94,65 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Handle individual copy buttons
+    document.querySelectorAll('.copy-section-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const textarea = document.getElementById(targetId);
+            if (!textarea) return;
+
+            const textToCopy = textarea.value.trim();
+            if (!textToCopy) return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                `;
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('copied');
+                }, 1500);
+            });
+        });
+    });
+
+    function getFullPromptText() {
+        const role = enhancedRole.value.trim();
+        const goal = enhancedGoal.value.trim();
+        const backstory = enhancedBackstory.value.trim();
+        const constraintsText = enhancedConstraints.value.trim();
+
+        let fullPrompt = '';
+        if (role) {
+            fullPrompt += `# Role\n${role}\n\n`;
+        }
+        if (goal) {
+            fullPrompt += `# Goal\n${goal}\n\n`;
+        }
+        if (backstory) {
+            fullPrompt += `# Backstory\n${backstory}\n\n`;
+        }
+        if (constraintsText) {
+            fullPrompt += `# Constraints\n`;
+            const lines = constraintsText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            lines.forEach(line => {
+                if (line.startsWith('-') || line.startsWith('*')) {
+                    fullPrompt += `${line}\n`;
+                } else {
+                    fullPrompt += `- ${line}\n`;
+                }
+            });
+        }
+        return fullPrompt.trim();
+    }
+
     copyBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(enhancedPromptText.textContent).then(() => {
+        const textToCopy = getFullPromptText();
+        if (!textToCopy) return;
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
             const originalText = copyBtn.innerHTML;
             copyBtn.innerHTML = `
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -119,16 +200,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function generateEnhancedPrompt(originalPrompt, apiKey, model) {
-        const systemInstruction = `You are an expert prompt engineer. Your goal is to rewrite the user's vague prompt into a highly effective, professional, and detailed prompt suitable for a large language model.
-      
-      Follow these rules:
-      1. Be specific and clear.
-      2. Add context if implied.
-      3. Specify the desired format of the output.
-      4. Do not include any introductory text like "Here is the enhanced prompt:". Just output the prompt itself.
-      5. Avoid violating and guardrails concerning similarity to third-party content.
-      6. Do NOT use markdown formatting (like **bold** or *italic*). Output plain text only.
-      User's vague prompt: "${originalPrompt}"`;
+        const systemInstruction = `You are an expert prompt engineer.
+Your task is to take a vague user prompt and expand/enhance it into a structured, highly effective system prompt using the Role-Goal-Backstory-Constraints framework.
+
+Here is the vague prompt to analyze and enhance:
+"${originalPrompt}"
+
+Deconstruct the user's intent and generate:
+1. role: A highly specific, authoritative role or persona the AI should adopt.
+2. goal: A detailed description of the objective to be achieved, including specific outputs and quality requirements.
+3. backstory: The contextual background, reasoning, target audience, or scenario details that explain why this is being done and help ground the AI's response.
+4. constraints: A list of strict rules, stylistic boundaries, technical limitations, format requirements, or pitfalls to avoid.
+
+Produce a JSON response conforming strictly to the requested schema.`;
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
@@ -142,7 +226,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     parts: [{
                         text: systemInstruction
                     }]
-                }]
+                }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            role: { type: "STRING" },
+                            goal: { type: "STRING" },
+                            backstory: { type: "STRING" },
+                            constraints: {
+                                type: "ARRAY",
+                                items: { type: "STRING" }
+                            }
+                        },
+                        required: ["role", "goal", "backstory", "constraints"]
+                    }
+                }
             })
         });
 
@@ -163,8 +263,24 @@ document.addEventListener('DOMContentLoaded', () => {
             throw new Error('No response from AI.');
         }
 
-        // Remove any asterisks that might have been included despite instructions
-        return enhanced.replace(/\*/g, '').trim();
+        try {
+            const parsed = JSON.parse(enhanced);
+            return {
+                role: parsed.role || '',
+                goal: parsed.goal || '',
+                backstory: parsed.backstory || '',
+                constraints: Array.isArray(parsed.constraints) ? parsed.constraints : []
+            };
+        } catch (e) {
+            console.error('Failed to parse Gemini response as JSON:', e);
+            // Fallback parsing
+            return {
+                role: 'AI Assistant',
+                goal: enhanced.replace(/\*/g, '').trim(),
+                backstory: 'Generated from legacy response.',
+                constraints: []
+            };
+        }
     }
 
     // --- Session Persistence ---
@@ -211,16 +327,44 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             history.forEach(item => {
+                let displayEnhanced = '';
+                if (typeof item.enhanced === 'object' && item.enhanced !== null) {
+                    const roleStr = item.enhanced.role ? `Role: ${item.enhanced.role}` : '';
+                    const goalStr = item.enhanced.goal ? `Goal: ${item.enhanced.goal}` : '';
+                    displayEnhanced = [roleStr, goalStr].filter(s => s).join(' | ');
+                    if (!displayEnhanced) {
+                        displayEnhanced = 'Structured Prompt';
+                    }
+                } else {
+                    displayEnhanced = item.enhanced || '';
+                }
+
                 const el = document.createElement('div');
                 el.className = 'history-item';
                 el.innerHTML = `
                     <div class="history-prompt"><strong>Original:</strong> ${escapeHtml(item.original)}</div>
-                    <div class="history-enhanced">${escapeHtml(item.enhanced)}</div>
+                    <div class="history-enhanced">${escapeHtml(displayEnhanced)}</div>
                     <span class="history-date">${new Date(item.timestamp).toLocaleString()}</span>
                 `;
                 el.addEventListener('click', () => {
                     promptInput.value = item.original;
-                    enhancedPromptText.textContent = item.enhanced;
+                    
+                    if (typeof item.enhanced === 'object' && item.enhanced !== null) {
+                        enhancedRole.value = item.enhanced.role || '';
+                        enhancedGoal.value = item.enhanced.goal || '';
+                        enhancedBackstory.value = item.enhanced.backstory || '';
+                        enhancedConstraints.value = Array.isArray(item.enhanced.constraints) 
+                            ? item.enhanced.constraints.join('\n') 
+                            : (item.enhanced.constraints || '');
+                    } else {
+                        // Legacy string format fallback
+                        enhancedRole.value = 'AI Assistant';
+                        enhancedGoal.value = item.enhanced || '';
+                        enhancedBackstory.value = 'Loaded from legacy history.';
+                        enhancedConstraints.value = '';
+                    }
+
+                    updateCharCounts();
                     resultContainer.classList.remove('hidden');
                     historyView.classList.add('hidden');
                     saveSession(item.original); // Update session

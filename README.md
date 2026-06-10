@@ -2,6 +2,32 @@
 
 PromptTune is a Chrome Extension designed to help users transform vague ideas into professional, high-quality prompts for Large Language Models (LLMs) like Gemini, ChatGPT, and Claude. It leverages the Google Gemini API to rewrite and enhance user inputs.
 
+## Installation & Setup
+
+Follow these steps to install and set up PromptTune in your Chrome browser:
+
+### 1. Download or Clone the Extension
+Clone this repository to your local machine:
+```bash
+git clone https://github.com/Gaurav30d/PromptTune.git
+cd PromptTune
+```
+*(Alternatively, you can download the repository as a ZIP file and extract it.)*
+
+### 2. Load the Extension in Chrome
+Since this project uses vanilla HTML/CSS/JS, no compilation or `npm install` is required:
+1.  Open Google Chrome and navigate to `chrome://extensions/`.
+2.  Enable **Developer mode** using the toggle switch in the top-right corner.
+3.  Click the **Load unpacked** button in the top-left corner.
+4.  Select the `PromptTune` folder you cloned or extracted (the directory containing `manifest.json`).
+
+### 3. Add your Gemini API Key
+To utilize the AI capabilities of PromptTune:
+1.  Get a free API Key from [Google AI Studio](https://aistudio.google.com/).
+2.  Click the **PromptTune** icon in your extension bar.
+3.  Click the **Settings** (gear) icon in the top-right of the popup.
+4.  Paste your API key, select your desired model (e.g. `gemini-2.5-flash`), and click **Save Settings**.
+
 ## Project Overview
 
 -   **Name**: PromptTune
@@ -62,31 +88,6 @@ The configuration file that defines permissions and entry points.
 -   **Host Permissions**:
     -   `https://generativelanguage.googleapis.com/*`: Allow direct API calls to Google's servers.
 
-## Installation & Setup
-
-Follow these steps to install and set up PromptTune in your Chrome browser:
-
-### 1. Download or Clone the Extension
-Clone this repository to your local machine:
-```bash
-git clone https://github.com/Gaurav30d/PromptTune.git
-cd PromptTune
-```
-*(Alternatively, you can download the repository as a ZIP file and extract it.)*
-
-### 2. Load the Extension in Chrome
-Since this project uses vanilla HTML/CSS/JS, no compilation or `npm install` is required:
-1.  Open Google Chrome and navigate to `chrome://extensions/`.
-2.  Enable **Developer mode** using the toggle switch in the top-right corner.
-3.  Click the **Load unpacked** button in the top-left corner.
-4.  Select the `PromptTune` folder you cloned or extracted (the directory containing `manifest.json`).
-
-### 3. Add your Gemini API Key
-To utilize the AI capabilities of PromptTune:
-1.  Get a free API Key from [Google AI Studio](https://aistudio.google.com/).
-2.  Click the **PromptTune** icon in your extension bar.
-3.  Click the **Settings** (gear) icon in the top-right of the popup.
-4.  Paste your API key, select your desired model (e.g. `gemini-2.5-flash`), and click **Save Settings**.
 
 ## Development & Contribution
 
